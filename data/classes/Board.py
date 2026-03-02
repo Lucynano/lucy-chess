@@ -90,3 +90,63 @@ class Board:
         elif clicked_square.occupying_piece is not None:
             if clicked_square.occupying_piece.color == self.turn:
                 self.selected_piece = clicked_square.occupying_piece
+
+    # check state checker
+    def is_in_check(self, color, board_change=None): # board_change = [(x1, y1), (x2, y2)]
+        output = False
+        king_pos = None
+        changing_piece = None
+        old_square = None
+        new_square = None
+        new_square_old_piece = None
+        if board_change is not None:
+            for square in self.squares:
+                if square.pos == board_change[0]:
+                    changing_piece = square.occupying_piece
+                    old_square = square
+                    old_square.occupying_piece = None
+            for square in self.squares:
+                if square.pos == board_change[1]:
+                    new_square = square
+                    new_square_old_piece = new_square.occupying_piece
+                    new_square.occupying_piece = changing_piece
+        pieces = [
+            i.occupying_piece for i in self.squares if i.occupying_piece is not None
+        ]
+        if changing_piece is not None:
+            if changing_piece.notation == 'K':
+                king_pos = new_square.pos
+        if king_pos == None:
+                for piece in pieces:
+                    if piece.notation == 'K' and piece.color == color:
+                        king_pos = piece.pos
+        for piece in pieces:
+                if piece.color != color:
+                    for square in piece.attacking_squares(self):
+                        if square.pos == king_pos:
+                            output = True
+        if board_change is not None:
+            old_square.occupying_piece = changing_piece
+            new_square.occupying_piece = new_square_old_piece
+        return output
+            
+    # checkmate state checker
+    def is_in_checkmate(self, color):
+        output = False
+        for piece in [i.occupying_piece for i in self.squares]:
+            if piece != None:
+                if piece.notation == 'K' and piece.color == color:
+                    king = piece
+        if king.get_valid_moves(self) == []:
+            if self.is_in_check(color):
+                output = True
+        return output
+
+    # highlights all the possible moves of a piece once selected while it is its color's turn
+    def draw(self, display):
+        if self.selected_piece is not None:
+            self.get_square_from_pos(self.selected_piece.pos).highlight = True
+            for square in self.selected_piece.get_valid_moves(self):
+                square.highlight = True
+        for square in self.squares:
+            square.draw(display)
