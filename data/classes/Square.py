@@ -9,7 +9,7 @@ class Square:
         self.height = height
         self.abs_x = x * width
         self.abs_y = y * height
-        self.abs_pos = (self.abs_x, self.abs_y) #  where the chess tile is assigned to be drawn inside the window
+        self.abs_pos = (self.abs_x, self.abs_y) # where the chess tile is assigned to be drawn inside the window
         self.pos = (x, y)
         self.color = 'light' if (x + y) % 2 == 0 else 'dark'
         self.draw_color = (220, 208, 194) if self.color == 'light' else (53, 53, 53)

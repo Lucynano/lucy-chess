@@ -1,4 +1,5 @@
 import pygame
+
 from data.classes.Square import Square
 from data.classes.pieces.Rook import Rook
 from data.classes.pieces.Bishop import Bishop
