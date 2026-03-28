@@ -25,7 +25,7 @@ class Board:
             ['', '', '', '', '', '', '', ''],
             ['', '', '', '', '', '', '', ''],
             ['wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP'],
-            ['wR', 'wN', 'ww', 'wQ', 'wK', 'ww', 'wN', 'wR'],
+            ['wR', 'wN', 'wB', 'wQ', 'wK', 'wB', 'wN', 'wR'],
         ] # represents the chessboard configuration with a 2D list having our pieces with their default position
         self.squares = self.generate_squares() # for making chess tiles and putting them all in a list
         self.setup_board()
