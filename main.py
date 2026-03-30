@@ -14,23 +14,47 @@ def draw(display):
     board.draw(display)
     pygame.display.update()
 
+def show_modal(display, message):
+    width, height = display.get_size()
+    
+    overlay = pygame.Surface((width, height), pygame.SRCALPHA)
+    overlay.fill((0, 0, 0, 150))  
+    
+    font = pygame.font.SysFont(None, 60)
+    text = font.render(message, True, (255, 255, 255))  # texte blanc
+    text_rect = text.get_rect(center=(width // 2, height // 2))
+    
+    display.blit(overlay, (0, 0))
+    display.blit(text, text_rect)
+    
+    pygame.display.update()
+
 if __name__ == '__main__':
     running = True
+    game_over = False
+    winner = None
+
     while running:
         mx, my = pygame.mouse.get_pos()
+    
         for event in pygame.event.get():
-            # quit the game if the user presses the close btn
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                # if the mouse is clicked
+            elif event.type == pygame.MOUSEBUTTONDOWN and not game_over:
                 if event.button == 1:
                     board.handle_click(mx, my)
-        if board.is_in_checkmate('black'): # if black is in checkmate
-            print('White wins!')
-            running = False
-        elif board.is_in_checkmate('white'): # idem for white
-            print('Black wins!')
-            running = False
-        # draw the board
+            elif event.type == pygame.MOUSEBUTTONDOWN and game_over:
+                running = False
+    
+        if not game_over:
+            if board.is_in_checkmate('black'):
+                winner = 'White'
+                game_over = True
+            elif board.is_in_checkmate('white'):
+                winner = 'Black'
+                game_over = True
+        
         draw(screen)
+        
+        if game_over:
+            show_modal(screen, f'{winner} wins!')
